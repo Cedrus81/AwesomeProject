@@ -36,7 +36,7 @@ const TodoForm = ({ todoList, addTodo }) => {
                 <View style={styles.form}>
                     <TextInput
                         placeholder="Enter todo item"
-                        style={{ flex: 1, borderColor: 'gray', borderWidth: 1, padding: 10 }}
+                        style={styles.input}
                         value={todoText}
                         onChangeText={setTodoText}
                         ref={inputRef}
@@ -74,7 +74,15 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 16,
         fontWeight: 'bold',
-    }
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        flex: 1,
+        marginRight: 10,
+        borderRadius: 5,
+    },
 })
 
 export default TodoForm
