@@ -1,45 +1,58 @@
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TextInput, Button, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { useRef, useState } from 'react'
 
 const TodoForm = ({ todoList, addTodo }) => {
-    const [todoText, setTodoText] = React.useState('');
-    const [error, setError] = React.useState('');
-
+    const [todoText, setTodoText] = useState('');
+    const [error, setError] = useState('');
+    const inputRef = useRef(null);
     const handleAdd = () => {
         const trimmed = todoText.trim();
-        if (trimmed) {
+        if (todoList.some(todo => todo.text === trimmed)) {
+            setError('Todo item already exists');
+            return
+        }
+        if (!trimmed) {
             setError('Todo item cannot be empty');
             return
         }
-        else if (todoList.some(todo => todo.text === trimmed)) {
-            setError('Todo item already exists');
-            return
-        } else {
+        else {
             addTodo([...todoList, { id: Date.now(), text: trimmed, completed: false }]);
             setError('');
             setTodoText('');
         }
+        Keyboard.dismiss(); // Dismiss keyboard
     }
 
     return (
-        <View>
-            <Text style={styles.header}>Todo List!</Text>
-            <Text>Add a new todo item:</Text>
-            <View style={styles.form}>
-                <TextInput
-                    placeholder="Enter todo item"
-                    style={{ flex: 1, borderColor: 'gray', borderWidth: 1, padding: 10 }}
-                    value={todoText}
-                    onChangeText={setTodoText}
-                />
-                <Button
-                    title="Add"
-                    onPress={handleAdd}
-                />
+        <TouchableWithoutFeedback
+            onPressOut={() => {
+                inputRef.current?.blur();
+                Keyboard.dismiss();
+            }}
+        >
+            <View>
+                <Text style={styles.header}>Todo List!</Text>
+                <Text>Add a new todo item:</Text>
+                <View style={styles.form}>
+                    <TextInput
+                        placeholder="Enter todo item"
+                        style={{ flex: 1, borderColor: 'gray', borderWidth: 1, padding: 10 }}
+                        value={todoText}
+                        onChangeText={setTodoText}
+                        ref={inputRef}
+                        accessibilityLabel="Todo input"
+                        accessibilityHint="Enter a new todo item"
+                    />
+                    <Button
+                        title="Add"
+                        onPress={handleAdd}
+                        accessibilityLabel="Add todo"
+                        accessibilityHint="Adds the entered todo to the list"
+                    />
+                </View>
+                {error ? <Text style={styles.error}>{error}</Text> : null}
             </View>
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 
