@@ -19,6 +19,13 @@ function App() {
   const removeTodo = (id: any) => {
     setTodoList(todoList.filter(todo => todo.id !== id));
   };
+  const editTodo = (id: any, newText: string) => {
+    setTodoList(
+      todoList.map(todo =>
+        todo.id === id ? { ...todo, text: newText } : todo,
+      ),
+    );
+  };
   const toggleCompleted = (id: any) => {
     setTodoList(
       todoList.map(todo =>
@@ -31,6 +38,7 @@ function App() {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <TodoForm todoList={todoList} addTodo={setTodoList} />
       <TodoList
+        editTodo={editTodo}
         todoList={todoList}
         removeTodo={removeTodo}
         toggleCompleted={toggleCompleted}

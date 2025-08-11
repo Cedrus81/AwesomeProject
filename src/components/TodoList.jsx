@@ -4,10 +4,22 @@ import { Animated } from 'react-native'
 import { useRef, useEffect } from 'react'
 import { Text } from 'react-native'
 
-const TodoList = ({ todoList, removeTodo, toggleCompleted }) => {
+const TodoList = ({ todoList, removeTodo, toggleCompleted, editTodo }) => {
 
     if (!todoList || todoList.length === 0) {
-        return <Text style={styles.emptyText}>Hurray! Nothing to do!</Text>
+        return (
+            <View style={{ alignItems: 'center', marginTop: 40 }}>
+                <Animated.View
+                    style={styles.allDoneContainer}                >
+                    <Text style={{ fontSize: 28, color: '#388e3c', fontWeight: 'bold', marginBottom: 10 }}>
+                        🎉 All done!
+                    </Text>
+                    <Text style={{ fontSize: 18, color: '#222', textAlign: 'center' }}>
+                        Hurray! Nothing to do!
+                    </Text>
+                </Animated.View>
+            </View>
+        )
     }
     return (
         <View>
@@ -69,7 +81,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-
         marginBottom: 10,
         borderRadius: 5,
         backgroundColor: '#f9f9f9',
@@ -95,10 +106,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
     },
-    emptyText: {
-        textAlign: 'center',
-        marginTop: 20,
-    }
+    allDoneContainer: {
+        backgroundColor: '#e0ffe0',
+        padding: 30,
+        borderRadius: 16,
+        shadowColor: '#4caf50',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 4,
+        alignItems: 'center',
+    },
 })
 
 export default TodoList
