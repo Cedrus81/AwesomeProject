@@ -7,7 +7,7 @@ import { Text } from 'react-native'
 const TodoList = ({ todoList, removeTodo, toggleCompleted }) => {
 
     if (!todoList || todoList.length === 0) {
-        return <Text style={{ textAlign: 'center', marginTop: 20 }}>Hurray! Nothing to do!</Text>
+        return <Text style={styles.emptyText}>Hurray! Nothing to do!</Text>
     }
     return (
         <View>
@@ -94,6 +94,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         marginTop: 10,
+    },
+    emptyText: {
+        textAlign: 'center',
+        marginTop: 20,
     }
 })
 
