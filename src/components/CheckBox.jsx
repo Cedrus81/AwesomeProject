@@ -1,12 +1,14 @@
 import React from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 
-const CheckBox = ({ itemId, isCompleted, toggleCompleted }) => {
+const CheckBox = ({ itemId, isCompleted, toggleCompleted, isDisabled }) => {
     return (
         <TouchableOpacity
             style={styles.container}
             onPress={() => toggleCompleted(itemId)}
             activeOpacity={0.7}
+        // disabled={isDisabled}
+
         >
             <View style={[styles.box, isCompleted && styles.boxChecked]}>
                 {isCompleted && <View style={styles.inner} />}

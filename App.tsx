@@ -6,7 +6,14 @@
  */
 
 import { useState } from 'react';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import TodoForm from './src/components/TodoForm';
 import TodoList from './src/components/TodoList';
 
@@ -34,16 +41,18 @@ function App() {
     );
   };
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <TodoForm todoList={todoList} addTodo={setTodoList} />
-      <TodoList
-        editTodo={editTodo}
-        todoList={todoList}
-        removeTodo={removeTodo}
-        toggleCompleted={toggleCompleted}
-      />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <TodoForm todoList={todoList} addTodo={setTodoList} />
+        <TodoList
+          editTodo={editTodo}
+          todoList={todoList}
+          removeTodo={removeTodo}
+          toggleCompleted={toggleCompleted}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
