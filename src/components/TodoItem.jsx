@@ -1,23 +1,41 @@
-import { Animated, Button, StyleSheet, TextInput } from 'react-native'
+import { Animated, Button, StyleSheet, TextInput, useAnimatedValue } from 'react-native'
 import CheckBox from './CheckBox'
 import { useRef, useEffect, useState } from 'react'
 
 const TodoItem = ({ item, removeTodo, toggleCompleted, editTodo }) => {
-    const bgAnim = useRef(new Animated.Value(item.completed ? 1 : 0)).current
-    const textColorAnim = useRef(new Animated.Value(item.completed ? 1 : 0)).current
+    const bgAnim = useRef(useAnimatedValue(item.completed ? 1 : 0)).current
+    const textColorAnim = useRef(useAnimatedValue(item.completed ? 1 : 0)).current
+    const fadeInAnim = useRef(useAnimatedValue(0)).current
+    const translateYAnim = useRef(useAnimatedValue(10)).current
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(item.text);
     useEffect(() => {
-        Animated.timing(bgAnim, {
-            toValue: item.completed ? 1 : 0,
-            duration: 400,
-            useNativeDriver: false,
-        }).start()
-        Animated.timing(textColorAnim, {
-            toValue: item.completed ? 1 : 0,
-            duration: 400,
-            useNativeDriver: false,
-        }).start()
+        Animated.parallel([
+            Animated.timing(fadeInAnim, {
+                toValue: 1,
+                duration: 400,
+                useNativeDriver: false,
+            }),
+            Animated.timing(translateYAnim, {
+                toValue: 0,
+                duration: 400,
+                useNativeDriver: false,
+            })
+        ]).start();
+    }, [fadeInAnim, translateYAnim]);
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(bgAnim, {
+                toValue: item.completed ? 1 : 0,
+                duration: 400,
+                useNativeDriver: false,
+            }),
+            Animated.timing(textColorAnim, {
+                toValue: item.completed ? 1 : 0,
+                duration: 400,
+                useNativeDriver: false,
+            })
+        ]).start()
     }, [bgAnim, item.completed, textColorAnim])
 
     const backgroundColor = bgAnim.interpolate({
@@ -30,8 +48,25 @@ const TodoItem = ({ item, removeTodo, toggleCompleted, editTodo }) => {
         outputRange: ['#222', '#fff'],
     })
 
+    const handleRemove = () => {
+        Animated.parallel([
+            Animated.timing(translateYAnim, {
+                toValue: 10,
+                duration: 400,
+                useNativeDriver: true,
+            }),
+            Animated.timing(fadeInAnim, {
+                toValue: 0,
+                duration: 400,
+                useNativeDriver: true,
+            })
+        ]).start(() => {
+            removeTodo(item.id);
+        });
+    }
+
     return (
-        <Animated.View style={[styles.container, { backgroundColor }]}>
+        <Animated.View style={[styles.container, { backgroundColor, opacity: fadeInAnim, transform: [{ translateY: translateYAnim }] },]}>
             <CheckBox itemId={item.id} isCompleted={item.completed} toggleCompleted={toggleCompleted} isDisabled={isEditing} />
             {isEditing ? (
                 <TextInput
@@ -43,13 +78,15 @@ const TodoItem = ({ item, removeTodo, toggleCompleted, editTodo }) => {
                         setIsEditing(false);
                     }}
                     autoFocus
+                    accessibilityLabel="Edit todo text"
+                    accessibilityHint="Edit this task"
                 />
             ) : (
                 <Animated.Text style={[styles.itemText, { color: textColor }]} onPress={() => setIsEditing(true)}>
                     {item.text}
                 </Animated.Text>
             )}
-            <Button title="X" onPress={() => removeTodo(item.id)} />
+            <Button title="X" onPress={handleRemove} />
         </Animated.View>
     )
 }

@@ -1,26 +1,36 @@
 import { View, Text, StyleSheet, TextInput, Button, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useRef, useState } from 'react'
+import PopupMessage from './PopupMessage';
 
 const TodoForm = ({ todoList, addTodo }) => {
     const [todoText, setTodoText] = useState('');
-    const [error, setError] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
     const inputRef = useRef(null);
     const handleAdd = () => {
         const trimmed = todoText.trim();
         if (todoList.some(todo => todo.text === trimmed)) {
-            setError('Todo item already exists');
+            handleError('Todo item already exists');
             return
         }
         if (!trimmed) {
-            setError('Todo item cannot be empty');
+            handleError('Todo item cannot be empty');
             return
         }
         else {
             addTodo([...todoList, { id: Date.now(), text: trimmed, completed: false }]);
-            setError('');
+            setErrorMsg('');
             setTodoText('');
         }
         Keyboard.dismiss(); // Dismiss keyboard
+    }
+
+    const handleError = (errorMessage) => {
+        setErrorMsg(errorMessage);
+        setErrorVisible(true);
+        setTimeout(() => {
+            setErrorVisible(false);
+        }, 2000); // Hide error after 2 seconds
     }
 
     return (
@@ -50,7 +60,7 @@ const TodoForm = ({ todoList, addTodo }) => {
                         accessibilityHint="Adds the entered todo to the list"
                     />
                 </View>
-                {error ? <Text style={styles.error}>{error}</Text> : null}
+                {errorVisible ? <PopupMessage message={errorMsg} /> : null}
             </View>
         </TouchableWithoutFeedback>
     )

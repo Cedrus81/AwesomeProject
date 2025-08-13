@@ -1,18 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import { useState } from 'react';
 import {
   StatusBar,
   StyleSheet,
   useColorScheme,
-  View,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import TodoForm from './src/components/TodoForm';
 import TodoList from './src/components/TodoList';
@@ -42,7 +35,7 @@ function App() {
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <TodoForm todoList={todoList} addTodo={setTodoList} />
         <TodoList
@@ -51,7 +44,7 @@ function App() {
           removeTodo={removeTodo}
           toggleCompleted={toggleCompleted}
         />
-      </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
@@ -71,7 +64,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flex: 1,
+    height: '100%',
+    // flex: 1,
   },
 });
 export default App;
