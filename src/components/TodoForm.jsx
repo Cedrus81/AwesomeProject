@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Button, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Button, Keyboard, TouchableWithoutFeedback, Animated } from 'react-native'
 import { useRef, useState } from 'react'
 import PopupMessage from './PopupMessage';
 
@@ -28,9 +28,6 @@ const TodoForm = ({ todoList, addTodo }) => {
     const handleError = (errorMessage) => {
         setErrorMsg(errorMessage);
         setErrorVisible(true);
-        setTimeout(() => {
-            setErrorVisible(false);
-        }, 2000); // Hide error after 2 seconds
     }
 
     return (
@@ -60,7 +57,7 @@ const TodoForm = ({ todoList, addTodo }) => {
                         accessibilityHint="Adds the entered todo to the list"
                     />
                 </View>
-                {errorVisible ? <PopupMessage message={errorMsg} /> : null}
+                <PopupMessage trigger={errorVisible} setTrigger={setErrorVisible} message={errorMsg} />
             </View>
         </TouchableWithoutFeedback>
     )
